@@ -7,7 +7,7 @@
     "start": "node index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Jeff Gulick",
   "license": "ISC",
   "dependencies": {
     "puppeteer": "^9.0.0"
