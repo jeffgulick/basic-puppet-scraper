@@ -1,3 +1,5 @@
+let providerList = [];
+let mergedList = [];
 const scraperObject = {
   url: `http://www.npino.org/doctor/dental-providers/dentist-122300000X?page=`,
 
@@ -6,7 +8,7 @@ const scraperObject = {
     console.log(`Navigating to ${this.url}...`);
 
     //loops through each page of site to be scraped
-    for (let i = 2; i <= 20; i++) {
+    for (let i = 1; i <= 5; i++) {
       const temp = `http://www.npino.org/doctor/dental-providers/dentist-122300000X?page=`;
 
       //changes url on each pass
@@ -21,8 +23,11 @@ const scraperObject = {
         links = links.map((el) => el.querySelector('a').href);
         return links;
       });
-      console.log(urls);
+      //dumping into array
+      providerList.push(urls);
+      mergedList = providerList.flat();
     }
+    console.log('list', mergedList);
   },
 };
 
