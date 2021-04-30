@@ -1,25 +1,28 @@
 const scraperObject = {
-  url: 'http://books.toscrape.com',
+  url: `http://www.npino.org/doctor/dental-providers/dentist-122300000X?page=`,
+
   async scraper(browser) {
     let page = await browser.newPage();
     console.log(`Navigating to ${this.url}...`);
-    // nav to page
-    await page.goto(this.url);
-    // Wait for the required DOM to be rendered
-    await page.waitForSelector('.page_inner');
-    // Get the link to all the required books
-    let urls = await page.$$eval('section ol > li', (links) => {
-      // Make sure the book to be scraped is in stock
-      links = links.filter(
-        (link) =>
-          link.querySelector('.instock.availability > i').textContent !==
-          'In stock'
-      );
-      // Extract the links from the data
-      links = links.map((el) => el.querySelector('h3 > a').href);
-      return links;
-    });
-    console.log(urls);
+
+    //loops through each page of site to be scraped
+    for (let i = 2; i <= 20; i++) {
+      const temp = `http://www.npino.org/doctor/dental-providers/dentist-122300000X?page=`;
+
+      //changes url on each pass
+      scraperObject.url = temp + i;
+      console.log(scraperObject.url);
+      //navigates to concantnated url
+      await page.goto(this.url);
+      // Wait for the required DOM to be rendered
+      await page.waitForSelector('.npi-record');
+      // Get the link to all the required names
+      let urls = await page.$$eval('.fullname', (links) => {
+        links = links.map((el) => el.querySelector('a').href);
+        return links;
+      });
+      console.log(urls);
+    }
   },
 };
 
