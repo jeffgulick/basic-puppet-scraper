@@ -19,6 +19,41 @@ const scraperObject = {
         links = links.map((el) => el.querySelector('a').href);
         return links;
       });
+
+      // Loop through each of those links, open a new page instance and get the relevant data from them
+      let pagePromise = (link) =>
+        new Promise(async (resolve, reject) => {
+          let dataObj = {};
+          let newPage = await browser.newPage();
+          await newPage.goto(link);
+          dataObj.street = await newPage.$eval(
+            '.address',
+            (text) => text.textContent
+          );
+          dataObj.cityState = await newPage.$eval(
+            '.citystate',
+            (cityState) => cityState.textContent
+          );
+          dataObj.phone = await newPage.$eval(
+            '.phone',
+            (phone) => phone.textContent
+          );
+          dataObj.fax = await newPage.$eval('.fax', (fax) => fax.textContent);
+
+          // dataObj.phone = await newPage.$eval('.table.table-striped > tbody > tr > td', table => table.textContent);
+
+          // dataObj.phone = await newPage.$eval('#product_gallery img', img => img.src);
+          // dataObj['bookDescription'] = await newPage.$eval('#product_description', div => div.nextSibling.nextSibling.textContent);
+          resolve(dataObj);
+          await newPage.close();
+        });
+
+      for (link in urls) {
+        let currentPageData = await pagePromise(urls[link]);
+        // scrapedData.push(currentPageData);
+        console.log(currentPageData);
+      }
+
       providerList.push(urls);
       let nextButtonExist = false;
 
@@ -42,7 +77,6 @@ const scraperObject = {
       }
     };
     recursiveLoop();
-    //dumping into array
   },
 };
 
