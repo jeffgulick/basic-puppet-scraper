@@ -2,6 +2,7 @@ const pageScraper = require('./pageScraper');
 
 const scrapeAll = async (browserInstance) => {
   let browser;
+  //creates browser instance and calls object method in pagescraper
   try {
     browser = await browserInstance;
     await pageScraper.scraper(browser);

@@ -30,7 +30,13 @@ const scraperObject = {
 
           //to resolve promise
           try {
+            //{**name**}
             await newPage.goto(link);
+            dataObj.name = await newPage.$eval(
+              '.col-md-9 > h1',
+              (name) => name.textContent
+            );
+            //{**address**}
             dataObj.street = await newPage.$eval(
               '.address',
               (text) => text.textContent
@@ -39,25 +45,22 @@ const scraperObject = {
               '.citystate',
               (cityState) => cityState.textContent
             );
+            //{**phone}
             dataObj.phone = await newPage.$eval(
               '.phone',
               (phone) => phone.textContent
             );
+            //{**fax}
             dataObj.fax = await newPage.$eval('.fax', (fax) => fax.textContent);
 
-            //if promise is rejected, will move past error and continue loop
+            //if promise is rejected, will report error and move on
           } catch (err) {
             console.log('Error!!!', err);
           }
-
-          // dataObj.phone = await newPage.$eval('.table.table-striped > tbody > tr > td', table => table.textContent);
-
-          // dataObj.phone = await newPage.$eval('#product_gallery img', img => img.src);
-          // dataObj['bookDescription'] = await newPage.$eval('#product_description', div => div.nextSibling.nextSibling.textContent);
           resolve(dataObj);
           await newPage.close();
         });
-
+      //looping through urls
       for (link in urls) {
         let currentPageData = await pagePromise(urls[link]);
         finalList.push(currentPageData);
