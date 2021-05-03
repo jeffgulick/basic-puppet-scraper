@@ -1,5 +1,6 @@
 let providerList = [];
 let mergedList = [];
+let finalList = [];
 
 const scraperObject = {
   url: `http://www.npino.org/doctor/dental-providers/dentist-122300000X`,
@@ -22,23 +23,32 @@ const scraperObject = {
 
       // Loop through each of those links, open a new page instance and get the relevant data from them
       let pagePromise = (link) =>
+        //create promise to look through records and pull out info
         new Promise(async (resolve, reject) => {
           let dataObj = {};
           let newPage = await browser.newPage();
-          await newPage.goto(link);
-          dataObj.street = await newPage.$eval(
-            '.address',
-            (text) => text.textContent
-          );
-          dataObj.cityState = await newPage.$eval(
-            '.citystate',
-            (cityState) => cityState.textContent
-          );
-          dataObj.phone = await newPage.$eval(
-            '.phone',
-            (phone) => phone.textContent
-          );
-          dataObj.fax = await newPage.$eval('.fax', (fax) => fax.textContent);
+
+          //to resolve promise
+          try {
+            await newPage.goto(link);
+            dataObj.street = await newPage.$eval(
+              '.address',
+              (text) => text.textContent
+            );
+            dataObj.cityState = await newPage.$eval(
+              '.citystate',
+              (cityState) => cityState.textContent
+            );
+            dataObj.phone = await newPage.$eval(
+              '.phone',
+              (phone) => phone.textContent
+            );
+            dataObj.fax = await newPage.$eval('.fax', (fax) => fax.textContent);
+
+            //if promise is rejected, will move past error and continue loop
+          } catch (err) {
+            console.log('Error!!!', err);
+          }
 
           // dataObj.phone = await newPage.$eval('.table.table-striped > tbody > tr > td', table => table.textContent);
 
@@ -50,7 +60,7 @@ const scraperObject = {
 
       for (link in urls) {
         let currentPageData = await pagePromise(urls[link]);
-        // scrapedData.push(currentPageData);
+        finalList.push(currentPageData);
         console.log(currentPageData);
       }
 
