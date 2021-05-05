@@ -1,5 +1,3 @@
-let providerList = [];
-let mergedList = [];
 let scrapedData = [];
 
 const scraperObject = {
@@ -10,7 +8,7 @@ const scraperObject = {
     console.log(`Navigating to ${this.url}...`);
 
     //loops through each page of site to be scraped
-    for (let i = 1; i <= 1; i++) {
+    for (let i = 21; i <= 30; i++) {
       const temp = `http://www.npino.org/doctor/dental-providers/dentist-122300000X?page=`;
       //changes url on each pass
       scraperObject.url = temp + i;
@@ -24,10 +22,6 @@ const scraperObject = {
         links = links.map((el) => el.querySelector('a').href);
         return links;
       });
-
-      //dumping into array
-      providerList.push(urls);
-      mergedList = providerList.flat();
 
       // Loop through each of those links, open a new page instance and get the relevant data from them
       let pagePromise = (link) =>
@@ -58,6 +52,11 @@ const scraperObject = {
             );
             //{**fax}
             dataObj.fax = await newPage.$eval('.fax', (fax) => fax.textContent);
+            //{**website}
+            dataObj.webSite = await newPage.$eval(
+              '.website',
+              (site) => site.textContent
+            );
           } catch (err) {
             console.log(err);
           }
@@ -72,7 +71,6 @@ const scraperObject = {
         console.log(currentPageData);
       }
     }
-    console.log('list', mergedList);
     return scrapedData;
   },
 };
