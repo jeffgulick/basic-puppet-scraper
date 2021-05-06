@@ -8,7 +8,7 @@ const scraperObject = {
     console.log(`Navigating to ${this.url}...`);
 
     //loops through each page of site to be scraped
-    for (let i = 21; i <= 30; i++) {
+    for (let i = 81; i <= 100; i++) {
       const temp = `http://www.npino.org/doctor/dental-providers/dentist-122300000X?page=`;
       //changes url on each pass
       scraperObject.url = temp + i;
@@ -74,5 +74,4 @@ const scraperObject = {
     return scrapedData;
   },
 };
-
 module.exports = scraperObject;
