@@ -1,5 +1,5 @@
 let scrapedData = [];
-
+let state = 'TX';
 const scraperObject = {
   url: `http://www.npino.org/doctor/dental-providers/dentist-122300000X?page=`,
 
@@ -8,8 +8,9 @@ const scraperObject = {
     console.log(`Navigating to ${this.url}...`);
 
     //loops through each page of site to be scraped
-    for (let i = 81; i <= 100; i++) {
-      const temp = `http://www.npino.org/doctor/dental-providers/dentist-122300000X?page=`;
+    for (let i = 1; i <= 10; i++) {
+      // const temp = `http://www.npino.org/doctor/dental-providers/dentist-122300000X?page=`;
+      const temp = `http://www.npino.org/doctor/dental-providers/general-practice-1223G0001X?state=TX&page=`;
       //changes url on each pass
       scraperObject.url = temp + i;
       console.log(scraperObject.url);
@@ -45,17 +46,18 @@ const scraperObject = {
               '.citystate',
               (cityState) => cityState.textContent
             );
+            dataObj.state = state;
             //{**phone}
-            dataObj.phone = await newPage.$eval(
-              '.phone',
-              (phone) => phone.textContent
+            dataObj.phone = await newPage.$eval('.phone', (phone) =>
+              phone.textContent.slice(7)
             );
             //{**fax}
-            dataObj.fax = await newPage.$eval('.fax', (fax) => fax.textContent);
+            dataObj.fax = await newPage.$eval('.fax', (fax) =>
+              fax.textContent.slice(5)
+            );
             //{**website}
-            dataObj.webSite = await newPage.$eval(
-              '.website',
-              (site) => site.textContent
+            dataObj.webSite = await newPage.$eval('.website', (site) =>
+              site.textContent.slice(9)
             );
           } catch (err) {
             console.log(err);

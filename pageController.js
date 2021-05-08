@@ -10,14 +10,17 @@ const scrapeAll = async (browserInstance) => {
     scrapedData = await pageScraper.scraper(browser);
     await browser.close();
     //writes scraped data to json file
-    fs.writeFile('81-100.json', JSON.stringify(scrapedData), 'utf8', function (
-      err
-    ) {
-      if (err) {
-        return console.log(err);
+    fs.writeFile(
+      '1-10_texas.json',
+      JSON.stringify(scrapedData),
+      'utf8',
+      function (err) {
+        if (err) {
+          return console.log(err);
+        }
+        console.log(scrapedData);
       }
-      console.log(scrapedData);
-    });
+    );
   } catch (err) {
     console.log('Could not resolve the browser instance => ', err);
   }
