@@ -42,11 +42,17 @@ const scraperObject = {
               '.address',
               (text) => text.textContent
             );
-            dataObj.cityState = await newPage.$eval(
-              '.citystate',
-              (cityState) => cityState.textContent
-            );
+            dataObj.city = await newPage.$eval('.citystate', (city) => {
+              let tag = city.textContent;
+              let index = tag.indexOf(`TX`);
+              return tag.slice(0, index - 1);
+            });
             dataObj.state = state;
+            dataObj.zipCode = await newPage.$eval('.citystate', (zip) => {
+              let tag = zip.textContent;
+              let index = tag.indexOf('TX');
+              return tag.slice(index + 3);
+            });
             //{**phone}
             dataObj.phone = await newPage.$eval('.phone', (phone) =>
               phone.textContent.slice(7)
